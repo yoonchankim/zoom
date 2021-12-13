@@ -1,0 +1,32 @@
+{
+  "type": "module",
+  "name": "zoom",
+  "version": "1.0.0",
+  "description": "Zoom Clone using webRTC and WebSokets",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoonchankim/zoom.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "bugs": {
+    "url": "https://github.com/yoonchankim/zoom/issues"
+  },
+  "homepage": "https://github.com/yoonchankim/zoom#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "babel": "^6.23.0",
+    "express": "^4.17.1",
+    "pug": "^3.0.2"
+  }
+}
