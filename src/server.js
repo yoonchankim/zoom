@@ -12,4 +12,12 @@ app.get("/*",(req,res)=>res.redirect("/"));
 const handleListen=()=>console.log(`Listening on http://localhost:3001`);
 const server=http.createServer(app);
 const wss=new WebSocketServer({server});
+wss.on("connection",(socket)=>{
+    console.log("Connected to Browser")
+    socket.on("close",()=>console.log("disconnected to browser"));
+    socket.on("message",(message)=>{
+        console.log(message.toString('utf8'))
+    })
+    socket.send("hello!!!");
+});
 server.listen(3001,handleListen);
