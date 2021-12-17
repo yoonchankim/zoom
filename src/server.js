@@ -1,5 +1,5 @@
 import express from "express";
-import path from "path";
+import path, { parse } from "path";
 import http from "http";
 import { WebSocketServer } from "ws";
 const app=express();
@@ -15,10 +15,17 @@ const wss=new WebSocketServer({server});
 const sockets=[];
 wss.on("connection",(socket)=>{
     sockets.push(socket);
+    socket["nickname"]="Anon"
     console.log("Connected to Browser")
     socket.on("close",()=>console.log("disconnected to browser"));
     socket.on("message",(message)=>{
-        sockets.forEach((aSocket)=>aSocket.send(message.toString()));
+        const parsed=JSON.parse(message);
+        switch(parsed.type){
+            case "new_message":
+                sockets.forEach((aSocket)=>aSocket.send(`${socket.nickname}:${parsed.payload}`));
+            case "nickname":
+                socket["nickname"]=parsed.payload;
+        }
     })
 });
 server.listen(3001,handleListen);
