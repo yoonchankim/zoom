@@ -14,11 +14,13 @@ const handleListen=()=>console.log(`Listening on http://localhost:3001`);
 const server=http.createServer(app);
 const io=new Server(server);
 io.on("connection",(socket)=>{
-    socket.on("enter_room", (roomName, done) => {
-        console.log(roomName);
-        setTimeout(()=>{
-            done("hello from the backend");
-        }, 15000);
+    socket.onAny((event)=>{
+        console.log(`socket event:${event}`);
+    })
+    socket.on("enter_room", (roomName,done) => {
+        socket.join(roomName);
+        done();
+        socket.to(roomName).emit("welcome");
     });
 });
 // const wss=new WebSocketServer({server});
