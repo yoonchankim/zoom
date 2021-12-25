@@ -13,9 +13,21 @@ app.get("/*",(req,res)=>res.redirect("/"));
 const handleListen=()=>console.log(`Listening on http://localhost:3001`);
 const server=http.createServer(app);
 const io=new Server(server);
+function publicRooms(){
+    const sids=io.sockets.adapter.sids;
+    const rooms=io.sockets.adapter.rooms;
+    const publicRooms=[];
+    rooms.forEach((_,key)=>{
+        if(sids.get(key)===undefined){
+            publicRooms.push(key);
+        }
+    })
+    return publicRooms;
+}
 io.on("connection",(socket)=>{
     socket["nickname"]="Anon";
     socket.onAny((event)=>{
+        console.log(io.sockets.adapter);
         console.log(`socket event:${event}`);
     })
     socket.on("enter_room", (roomName,done) => {
@@ -23,9 +35,13 @@ io.on("connection",(socket)=>{
         done();
         socket.to(roomName).emit("welcome",socket.nickname);
         console.log(socket.rooms);
+        io.sockets.emit("room_change",publicRooms());
     });
     socket.on("disconnecting",()=>{
         socket.rooms.forEach(room=>socket.to(room).emit("bye",socket.nickname));
+    })
+    socket.on("disconnect",()=>{
+        io.sockets.emit("room_change",publicRooms());
     })
     socket.on("new_message",(msg,roomName,done)=>{
         socket.to(roomName).emit("new_message",`${socket.nickname}:${msg}`);
