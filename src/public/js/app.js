@@ -57,10 +57,14 @@ function handleFirstNicknameSubmit(event){
 }
 form.addEventListener("submit",handleRoomSubmit);
 form2.addEventListener("submit",handleFirstNicknameSubmit);
-socket.on("welcome",(user)=>{
+socket.on("welcome",(user,newCount)=>{
+    const h3=room.querySelector("h3");
+    h3.innerText=`room ${roomName} (${newCount})`;
     addMessage(`${user} arrive`);
 })
-socket.on("bye",(left)=>{
+socket.on("bye",(left,newCount)=>{
+    const h3=room.querySelector("h3");
+    h3.innerText=`room ${roomName} (${newCount})`;
     addMessage(`${left} left`);
 })
 socket.on("new_message",(msg)=>{
