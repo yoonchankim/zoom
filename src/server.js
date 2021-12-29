@@ -13,4 +13,20 @@ app.get("/",(req,res)=>res.render("home",{nickname:firstNickName}));
 app.get("/*",(req,res)=>res.redirect("/"));
 const handleListen=()=>console.log(`Listening on http://localhost:3001`);
 const server=http.createServer(app);
+const io=new Server(server, {
+    cors: {
+      origin: ["https://admin.socket.io"],
+      credentials: true,
+    },
+  });
+  instrument(io, {
+    auth: false,
+  });
+io.on("connection",socket=>{
+    socket.on("join_room",(roomName,done)=>{
+        socket.join(roomName);
+        done();
+        socket.to(roomName).emit("welcome")
+    })
+})
 server.listen(3001,handleListen);
